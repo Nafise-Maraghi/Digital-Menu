@@ -5,16 +5,16 @@ from rest_framework import serializers
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['name']
+        fields = ['name', 'pk']
 
 
 class OptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Option
-        fields = ['name', 'price']
+        fields = ['name', 'price', 'pk']
 
 
-class Itemserializer(serializers.ModelSerializer):
+class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = '__all__'
