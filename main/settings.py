@@ -142,16 +142,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '')
 MEDIA_URL = 'images/'
 
 
-# settings for sending email
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.google.com'
-EMAIL_HOST_USER = os.getenv("EMAIL_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
