@@ -4,6 +4,7 @@ from django.urls import path
 urlpatterns = [
     path('item/create/', ItemCreateAPI.as_view()),
     path('item/list/', ItemListAPI.as_view()),
+    path('item/list/<int:pk>/', ItemRetrieveAPI.as_view()),
     path('item/update/<int:pk>/', ItemUpdateAPI.as_view()),
     path('item/delete/<int:pk>/', ItemDeleteAPI.as_view()),
     # path('option/create/', OptionCreateAPI.as_view()),

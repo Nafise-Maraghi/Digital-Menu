@@ -14,6 +14,13 @@ class ItemCreateAPI(generics.CreateAPIView):
     serializer_class = ItemSerializer
 
 
+# representing a single model instance
+class ItemRetrieveAPI(generics.RetrieveAPIView):
+    serializer_class = ItemSerializer
+    lookup_field = 'pk'
+    queryset = Item.objects.all()
+
+
 # representing a collection of model instances
 class ItemListAPI(generics.ListAPIView):
     serializer_class = ItemSerializer
