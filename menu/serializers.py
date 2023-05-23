@@ -5,13 +5,13 @@ from rest_framework import serializers
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['name', 'pk']
+        fields = '__all__'
 
 
 class OptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Option
-        fields = ['name', 'price', 'pk']
+        fields = '__all__'
 
 
 class ItemSerializer(serializers.ModelSerializer):
