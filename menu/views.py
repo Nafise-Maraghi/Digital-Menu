@@ -1,5 +1,5 @@
-from .models import Category, Item, Option
-from .serializers import CategorySerializer, ItemSerializer, OptionSerializer
+from .models import Category, Item
+from .serializers import ItemSerializer
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
@@ -41,30 +41,30 @@ class ItemDeleteAPI(generics.DestroyAPIView):
 # Option views
 
 # creating a single model instance
-class OptionCreateAPI(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
-    model = Option
-    serializer_class = OptionSerializer
+# class OptionCreateAPI(generics.CreateAPIView):
+#     permission_classes = [IsAuthenticated]
+#     model = Option
+#     serializer_class = OptionSerializer
 
 
-# representing a collection of model instances
-class OptionListAPI(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = OptionSerializer
-    queryset = Option.objects.all()
+# # representing a collection of model instances
+# class OptionListAPI(generics.ListAPIView):
+#     permission_classes = [IsAuthenticated]
+#     serializer_class = OptionSerializer
+#     queryset = Option.objects.all()
 
 
-# updating a single model instance
-class OptionUpdateAPI(generics.UpdateAPIView):
-    permission_classes = [IsAuthenticated]
-    lookup_field = 'pk'
-    serializer_class = OptionSerializer
-    queryset = Option.objects.all()
+# # updating a single model instance
+# class OptionUpdateAPI(generics.UpdateAPIView):
+#     permission_classes = [IsAuthenticated]
+#     lookup_field = 'pk'
+#     serializer_class = OptionSerializer
+#     queryset = Option.objects.all()
 
 
-# deleting a single model instance
-class OptionDeleteAPI(generics.DestroyAPIView):
-    permission_classes = [IsAuthenticated]
-    lookup_field = 'pk'
-    serializer_class = OptionSerializer
-    queryset = Option.objects.all()
+# # deleting a single model instance
+# class OptionDeleteAPI(generics.DestroyAPIView):
+#     permission_classes = [IsAuthenticated]
+#     lookup_field = 'pk'
+#     serializer_class = OptionSerializer
+#     queryset = Option.objects.all()
