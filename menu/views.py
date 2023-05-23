@@ -5,16 +5,6 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 
 
-# Category views
-
-# representing a collection of model instances
-class CategoryListAPI(generics.ListAPIView):
-    serializer_class = CategorySerializer
-    queryset = Category.objects.all()
-
-
-# ______________________________
-
 # Item views
 
 # creating a single model instance
