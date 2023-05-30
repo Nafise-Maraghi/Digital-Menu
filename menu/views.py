@@ -97,6 +97,7 @@ class OptionCreateAPI(generics.CreateAPIView):
 # representing a single model instance
 class OptionRetrieveAPI(generics.RetrieveAPIView):
     lookup_field = 'pk'
+    permission_classes = [IsAuthenticated]
     queryset = Option.objects.all()
     serializer_class = OptionSerializer
 
