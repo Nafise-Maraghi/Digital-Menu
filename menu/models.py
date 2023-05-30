@@ -12,12 +12,12 @@ class Category(models.Model):
         return self.name
 
 
-# class Option(models.Model):
-#     name = models.CharField(max_length=100, blank=False, null=False)
-#     price = models.PositiveIntegerField(blank=False, null=False)
+class Option(models.Model):
+    name = models.CharField(max_length=100, blank=False, null=False)
+    price = models.PositiveIntegerField(blank=False, null=False)
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
 
 
 class Item(models.Model):
@@ -27,7 +27,7 @@ class Item(models.Model):
     image = models.ImageField(upload_to="uploads/images/", blank=True, null=True)
     name = models.CharField(max_length=100, blank=False, null=False)
     price = models.PositiveIntegerField(blank=False, null=False)
-    # options = models.ManyToManyField(Option, related_name='options', blank=True)
+    options = models.ManyToManyField(Option, related_name='options', blank=True)
 
     def __str__(self):
         return self.name
