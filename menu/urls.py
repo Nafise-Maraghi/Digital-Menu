@@ -5,7 +5,7 @@ urlpatterns = [
     # /category
     path('category/create/', CategoryCreateAPI.as_view()),
     path('category/list/', CategoryListAPI.as_view()),
-    path('category/list/<int:pk>/', CategoryUpdateAPI.as_view()),
+    path('category/list/<int:pk>/', CategoryRetrieveAPI.as_view()),
     path('category/update/<int:pk>/', CategoryUpdateAPI.as_view()),
     path('category/delete/<int:pk>/', CategoryDeleteAPI.as_view()),
 
@@ -19,7 +19,7 @@ urlpatterns = [
     # /option
     path('option/create/', OptionCreateAPI.as_view()),
     path('option/list/', OptionListAPI.as_view()),
-    path('option/list/<int:pk>/', OptionUpdateAPI.as_view()),
+    path('option/list/<int:pk>/', OptionRetrieveAPI.as_view()),
     path('option/update/<int:pk>/', OptionUpdateAPI.as_view()),
     path('option/delete/<int:pk>/', OptionDeleteAPI.as_view()),
 ]

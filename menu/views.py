@@ -14,7 +14,7 @@ class CategoryCreateAPI(generics.CreateAPIView):
 
 
 # representing a single model instance
-class CategoryRetrieveAPIView(generics.RetrieveAPIView):
+class CategoryRetrieveAPI(generics.RetrieveAPIView):
     lookup_field = 'pk'
     permission_classes = [IsAuthenticated]
     queryset = Category.objects.all()
@@ -91,6 +91,13 @@ class ItemDeleteAPI(generics.DestroyAPIView):
 class OptionCreateAPI(generics.CreateAPIView):
     model = Option
     permission_classes = [IsAuthenticated]
+    serializer_class = OptionSerializer
+
+
+# representing a single model instance
+class OptionRetrieveAPI(generics.RetrieveAPIView):
+    lookup_field = 'pk'
+    queryset = Option.objects.all()
     serializer_class = OptionSerializer
 
 
