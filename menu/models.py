@@ -1,12 +1,19 @@
 from django.db import models
 
 
+class CategoryIcon(models.Model):
+    icon = models.ImageField(upload_to="uploads/icons/", blank=False, null=False)
+    availability = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.icon.url
+
 class Category(models.Model):
     class Meta:
         verbose_name_plural = "categories"
 
     name = models.CharField(max_length=100, blank=False, null=False)
-    icon = models.ImageField(upload_to="uploads/icons/", blank=True, null=True)
+    icon = models.OneToOneField(CategoryIcon, blank=False, null=False, on_delete=models.RESTRICT)
 
     def __str__(self):
         return self.name

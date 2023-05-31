@@ -1,5 +1,5 @@
 from .models import Category, Item, Option
-from .serializers import ItemSerializer, OptionSerializer, CategorySerializer
+from .serializers import *
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 class CategoryCreateAPI(generics.CreateAPIView):
     model = Category
     permission_classes = [IsAuthenticated]
-    serializer_class = CategorySerializer
+    serializer_class = CategoryCreateUpdateSerializer
 
 
 # representing a single model instance
@@ -33,7 +33,7 @@ class CategoryUpdateAPI(generics.UpdateAPIView):
     lookup_field = 'pk'
     permission_classes = [IsAuthenticated]
     queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+    serializer_class = CategoryCreateUpdateSerializer
 
 
 # deleting a single model instance
@@ -51,7 +51,7 @@ class CategoryDeleteAPI(generics.DestroyAPIView):
 class ItemCreateAPI(generics.CreateAPIView):
     model = Item
     permission_classes = [IsAuthenticated]
-    serializer_class = ItemSerializer
+    serializer_class = ItemCreateUpdateSerializer
 
 
 # representing a single model instance
@@ -72,7 +72,7 @@ class ItemUpdateAPI(generics.UpdateAPIView):
     lookup_field = 'pk'
     permission_classes = [IsAuthenticated]
     queryset = Item.objects.all()
-    serializer_class = ItemSerializer
+    serializer_class = ItemCreateUpdateSerializer
 
 
 # deleting a single model instance

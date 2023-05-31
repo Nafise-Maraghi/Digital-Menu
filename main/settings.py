@@ -139,7 +139,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # media settings
 
 MEDIA_ROOT = os.path.join(BASE_DIR, '')
-MEDIA_URL = 'images/'
+MEDIA_URL = 'media/'
 
 
 REST_FRAMEWORK = {
@@ -151,6 +151,6 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
-   'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+   'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
