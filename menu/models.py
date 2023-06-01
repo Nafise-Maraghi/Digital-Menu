@@ -2,8 +2,11 @@ from django.db import models
 
 
 class CategoryIcon(models.Model):
+    class Meta:
+        db_table = "menu_category_icon"
+        
     icon = models.ImageField(upload_to="uploads/icons/", blank=False, null=False)
-    availability = models.BooleanField(default=False)
+    availability = models.BooleanField(default=True)
 
     def __str__(self):
         return self.icon.url
