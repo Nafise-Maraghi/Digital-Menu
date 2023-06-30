@@ -11,6 +11,7 @@ class CategoryIcon(models.Model):
     def __str__(self):
         return self.icon.url
 
+
 class Category(models.Model):
     class Meta:
         verbose_name_plural = "categories"
