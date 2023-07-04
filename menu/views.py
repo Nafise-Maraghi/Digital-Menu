@@ -51,20 +51,20 @@ class CategoryDeleteAPI(generics.DestroyAPIView):
 class ItemCreateAPI(generics.CreateAPIView):
     model = Item
     # permission_classes = [IsAuthenticated]
-    serializer_class = ItemSerializer
+    serializer_class = ItemCreateSerializer
 
 
 # representing a single model instance
 class ItemRetrieveAPI(generics.RetrieveAPIView):
     lookup_field = 'pk'
     queryset = Item.objects.all()
-    serializer_class = ItemSerializer
+    serializer_class = ItemBaseSerializer
 
 
 # representing a collection of model instances
 class ItemListAPI(generics.ListAPIView):
     queryset = Item.objects.all()
-    serializer_class = ItemSerializer
+    serializer_class = ItemBaseSerializer
 
 
 # updating a single model instance
@@ -72,7 +72,7 @@ class ItemUpdateAPI(generics.UpdateAPIView):
     lookup_field = 'pk'
     # permission_classes = [IsAuthenticated]
     queryset = Item.objects.all()
-    serializer_class = ItemSerializer
+    serializer_class = ItemUpdateSerializer
 
 
 # deleting a single model instance
