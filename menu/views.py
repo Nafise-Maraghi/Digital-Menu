@@ -1,6 +1,5 @@
-from .models import Category, CategoryIcon, Item, Option
+from .models import *
 from .serializers import *
-from django.shortcuts import render
 from rest_framework import generics
 # from rest_framework.permissions import IsAuthenticated
 
@@ -52,7 +51,7 @@ class CategoryDeleteAPI(generics.DestroyAPIView):
 class ItemCreateAPI(generics.CreateAPIView):
     model = Item
     # permission_classes = [IsAuthenticated]
-    serializer_class = ItemCreateUpdateSerializer
+    serializer_class = ItemSerializer
 
 
 # representing a single model instance
@@ -73,7 +72,7 @@ class ItemUpdateAPI(generics.UpdateAPIView):
     lookup_field = 'pk'
     # permission_classes = [IsAuthenticated]
     queryset = Item.objects.all()
-    serializer_class = ItemCreateUpdateSerializer
+    serializer_class = ItemSerializer
 
 
 # deleting a single model instance
