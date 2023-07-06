@@ -45,6 +45,8 @@ class Item(models.Model):
 class ItemImage(models.Model):
     image = models.ImageField(upload_to="uploads/images/", blank=False, null=False)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='images', blank=False, null=False)
+    # if this is the image that should be previewed in the main page
+    preview = models.BooleanField(default=False)
 
     def __str__(self):
         return self.image.url

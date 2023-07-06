@@ -28,7 +28,7 @@ class OptionSerializer(serializers.ModelSerializer):
 class ItemImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ItemImage
-        fields = ('id', 'image', 'item')
+        fields = ('id', 'image', 'item', 'preview')
         extra_kwargs = {'item': {'write_only': True}}
 
 
@@ -44,36 +44,56 @@ class ItemBaseSerializer(serializers.ModelSerializer):
 class ItemCreateSerializer(ItemBaseSerializer, serializers.ModelSerializer):
     # to set default availability to true
     availability = serializers.BooleanField(default=True)
+    # the image that should be previewed in the main page
+    preview_image = serializers.ImageField(default=None, write_only=True)
+    images = serializers.ListField(child=serializers.ImageField(), max_length=5, allow_null=False, default=None, write_only=True)
+
+    class Meta(ItemBaseSerializer.Meta):
+        fields = ItemBaseSerializer.Meta.fields + ('preview_image',)
 
     # overriding this method to add images manually
     def create(self, validated_data):
-        request_data = self.context['request'].data.items()
-        # calling super().create() to create an instance
-        item = super().create(validated_data)
+        print(validated_data)
+        preview_image = validated_data.pop('preview_image')
+        images = validated_data.pop('images')
+        options = validated_data.pop('options')
+        item = Item.objects.create(**validated_data)
 
-        # adding images
-        for data in request_data:
-            if data[0] not in validated_data.keys():
-                item_image_serializer = ItemImageSerializer(data={"image":data[1], "item":item.id})
+        if preview_image:
+            serializer = ItemImageSerializer(data={'image': preview_image, 'item': item.id, 'preview': True})
 
-                if item_image_serializer.is_valid():
-                    item_image_serializer.save()
+            if serializer.is_valid():
+                serializer.save()
+        
+        if images:
+            for image in images:
+                serializer = ItemImageSerializer(data={'image': image, 'item': item.id, 'preview': False})
+
+                if serializer.is_valid():
+                    serializer.save()
+        
+        if options:
+            item.options.add(*options)
 
         return item
 
 
 class ItemUpdateSerializer(ItemBaseSerializer, serializers.ModelSerializer):
     # a list of IDs of removed images
-    removed_images = serializers.ListField(child=serializers.IntegerField(), allow_null=True)
+    removed_images = serializers.ListField(child=serializers.IntegerField(), allow_null=False, write_only=True)
+    # a list of new images
+    images = serializers.ListField(child=serializers.ImageField(), max_length=5, allow_null=False, default=None, write_only=True)
+    old_preview_image_id = serializers.IntegerField(write_only=True)
+    # if the new preview image already exists
+    new_preview_image_id = serializers.IntegerField(write_only=True)
+    # if the new preview image is uploaded
+    new_preview_image = serializers.ImageField(write_only=True)
     
-    class Meta:
-        model = Item
-        fields = ('id', 'name', 'category', 'category_name', 'price', 'description', 'options', 'availability', 'images', 'removed_images')
+    class Meta(ItemBaseSerializer.Meta):
+        fields = ItemBaseSerializer.Meta.fields + ('removed_images', 'old_preview_image_id', 'new_preview_image_id', 'new_preview_image')
 
     # overriding this method to update images manually
     def update(self, instance, validated_data):
-        request_data = self.context['request'].data.items()
-
         # removing old images
         if 'removed_images' in validated_data:
             removed_images = validated_data['removed_images']
@@ -84,12 +104,39 @@ class ItemUpdateSerializer(ItemBaseSerializer, serializers.ModelSerializer):
                     item_image.delete()
 
         # adding new images
-        for data in request_data:
-            if data[0] not in validated_data.keys():
-                item_image_serializer = ItemImageSerializer(data={"image":data[1], "item":instance.id})
+        if 'images' in validated_data:
+            images = validated_data['images']
 
-                if item_image_serializer.is_valid():
-                    item_image_serializer.save()
+            for image in images:
+                serializer = ItemImageSerializer(data={'image': image, 'item': instance.id, 'preview': False})
+
+                if serializer.is_valid():
+                    serializer.save()
+        
+        if 'new_preview_image_id' in validated_data:
+            new_id = validated_data['new_preview_image_id']
+            new_item_image = ItemImage.objects.get(id=new_id)
+            new_item_image.preview = True
+            new_item_image.save()
+
+        
+        elif 'new_preview_image' in validated_data:
+            new_image = validated_data['new_preview_image']
+            serializer = ItemImageSerializer(data={'image': new_image, 'item': instance.id, 'preview': True})
+
+            if serializer.is_valid():
+                serializer.save()
+
+        if 'old_preview_image_id' in validated_data:
+            old_id = validated_data['old_preview_image_id']
+
+            try:
+                old_item_image = ItemImage.objects.get(id=old_id)
+                old_item_image.preview = False
+                old_item_image.save()
+            except:
+                pass
+
 
         # calling super().update() to update values in validated_data
         return super().update(instance, validated_data)
