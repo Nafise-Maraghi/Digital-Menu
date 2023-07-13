@@ -1,5 +1,6 @@
-from .models import *
-from .serializers import *
+import os
+from .models import Category, Item, Option
+from .serializers import CategorySerializer, CategoryCreateUpdateSerializer, ItemBaseSerializer, ItemCreateSerializer, ItemUpdateSerializer, OptionSerializer
 from rest_framework import generics
 # from rest_framework.permissions import IsAuthenticated
 
@@ -42,6 +43,21 @@ class CategoryDeleteAPI(generics.DestroyAPIView):
     # permission_classes = [IsAuthenticated]
     queryset = Category.objects.all()
 
+    def perform_destroy(self, instance):
+        items = instance.items.all()
+
+        # removing images locally
+        for item in items:
+            images = item.images.all()
+
+            if images:
+                for item_image in images:
+                    try:
+                        os.remove(item_image.image.path)
+                    except:
+                        pass
+
+        return super().perform_destroy(instance)
 
 # ______________________________
 
@@ -78,9 +94,18 @@ class ItemUpdateAPI(generics.UpdateAPIView):
 # deleting a single model instance
 class ItemDeleteAPI(generics.DestroyAPIView):
     lookup_field = 'pk'
-    # permission_classes = [IsAuthenticated]
     queryset = Item.objects.all()
 
+    # permission_classes = [IsAuthenticated]
+    def perform_destroy(self, instance):
+        images = instance.images.all()
+
+        # removing images locally
+        if images:
+            for item_image in images:
+                os.remove(item_image.image.path)
+
+        return super().perform_destroy(instance)
 
 # ______________________________
 
