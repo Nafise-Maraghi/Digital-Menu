@@ -35,6 +35,7 @@ class ItemImageSerializer(serializers.ModelSerializer):
 class ItemBaseSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category', read_only=True)
     images = ItemImageSerializer(many=True, read_only=True)
+    options = OptionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Item
@@ -45,8 +46,8 @@ class ItemCreateSerializer(ItemBaseSerializer, serializers.ModelSerializer):
     # to set default availability to true
     availability = serializers.BooleanField(default=True)
     # the image that should be previewed in the main page
-    preview_image = serializers.ImageField(default=None, write_only=True)
-    images = serializers.ListField(child=serializers.ImageField(), max_length=5, allow_null=False, default=None, write_only=True)
+    preview_image = serializers.ImageField(default=None, write_only=True, help_text="the image that should be displayed in the main page")
+    images = serializers.ListField(child=serializers.ImageField(), max_length=5, allow_null=False, default=None, write_only=True, help_text="a list of image files")
 
     class Meta(ItemBaseSerializer.Meta):
         fields = ItemBaseSerializer.Meta.fields + ('preview_image',)
@@ -85,15 +86,15 @@ class ItemCreateSerializer(ItemBaseSerializer, serializers.ModelSerializer):
 
 class ItemUpdateSerializer(ItemBaseSerializer, serializers.ModelSerializer):
     # a list of new images
-    images = serializers.ListField(child=serializers.ImageField(), max_length=5, allow_null=False, default=None, write_only=True)
+    images = serializers.ListField(child=serializers.ImageField(), max_length=5, allow_null=False, default=None, write_only=True, help_text="a list of image files")
     # if the new preview image is uploaded
-    new_preview_image = serializers.ImageField(write_only=True)
+    new_preview_image = serializers.ImageField(write_only=True, help_text="if the new preview image is uploaded by the user")
     # if the new preview image already exists
-    new_preview_image_id = serializers.IntegerField(write_only=True)
+    new_preview_image_id = serializers.IntegerField(write_only=True, help_text="if the new preview image is one of the old images")
     # a list of IDs of removed images
-    removed_images = serializers.ListField(child=serializers.IntegerField(), allow_null=False, write_only=True)
+    removed_images = serializers.ListField(child=serializers.IntegerField(), allow_null=False, write_only=True, help_text="a list of IDs of removed images")
     # a list of IDs of removed options
-    removed_options = serializers.ListField(child=serializers.IntegerField(), allow_null=False, write_only=True)
+    removed_options = serializers.ListField(child=serializers.IntegerField(), allow_null=False, write_only=True, help_text="a list of IDs of removed options")
     
     class Meta(ItemBaseSerializer.Meta):
         fields = ItemBaseSerializer.Meta.fields + ('removed_images', 'new_preview_image_id', 'new_preview_image', 'removed_options')
@@ -215,5 +216,5 @@ class ItemUpdateSerializer(ItemBaseSerializer, serializers.ModelSerializer):
                     # instance.remove(option)
                     instance.save()
         
-        # calling super().update() to update values in validated_data
+        # calling super().update() to update other values in validated_data
         return super().update(instance, validated_data)
