@@ -92,21 +92,13 @@ class ItemUpdateSerializer(ItemBaseSerializer, serializers.ModelSerializer):
     new_preview_image_id = serializers.IntegerField(write_only=True)
     # a list of IDs of removed images
     removed_images = serializers.ListField(child=serializers.IntegerField(), allow_null=False, write_only=True)
+    # a list of IDs of removed options
+    removed_options = serializers.ListField(child=serializers.IntegerField(), allow_null=False, write_only=True)
     
     class Meta(ItemBaseSerializer.Meta):
-        fields = ItemBaseSerializer.Meta.fields + ('removed_images', 'new_preview_image_id', 'new_preview_image')
+        fields = ItemBaseSerializer.Meta.fields + ('removed_images', 'new_preview_image_id', 'new_preview_image', 'removed_options')
     
 
-    def validate_removed_images(self, value):
-        images_id = [x['id'] for x in self.instance.images.all().values()]
-        
-        for x in value:
-            if x not in images_id:
-                raise serializers.ValidationError(f"Invalid id \"{x}\"")
-        
-        return value
-
-    
     def validate_new_preview_image_id(self, value):
         images_id = [x['id'] for x in self.instance.images.all().values()]
         preview_image_id = self.instance.images.get(preview=True).id
@@ -117,6 +109,26 @@ class ItemUpdateSerializer(ItemBaseSerializer, serializers.ModelSerializer):
         if value == preview_image_id:
             raise serializers.ValidationError("new value is required")
             
+        return value
+
+
+    def validate_removed_images(self, value):
+        images_id = [x['id'] for x in self.instance.images.all().values()]
+        
+        for x in value:
+            if x not in images_id:
+                raise serializers.ValidationError(f"Invalid pk \"{x}\" - object does not exist.")
+        
+        return value
+
+
+    def validate_removed_options(self, value):
+        options_id = [x['id'] for x in self.instance.options.all().values()]
+
+        for x in value:
+            if x not in options_id:
+                raise serializers.ValidationError(f"Invalid pk \"{x}\" - object does not exist.")
+
         return value
 
 
@@ -184,6 +196,24 @@ class ItemUpdateSerializer(ItemBaseSerializer, serializers.ModelSerializer):
 
                 if serializer.is_valid():
                     serializer.save()
+
+        # adding new options
+        if 'options' in validated_data:
+            options = validated_data.pop('options')
+
+            for option in options:
+                instance.options.add(option)
+
+        # removing old options
+        if 'removed_options' in validated_data:
+            removed_options = validated_data.pop('removed_options')
+            options = instance.options.all()
+
+            for option in options:
+                if option.id in removed_options:
+                    instance.options.remove(option)
+                    # instance.remove(option)
+                    instance.save()
         
         # calling super().update() to update values in validated_data
         return super().update(instance, validated_data)
