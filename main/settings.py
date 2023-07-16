@@ -32,6 +32,7 @@ SECRET_KEY = 'django-insecure-ksb*o%e10wo#tn*lq(e!eqc9rv&n7g(#6pyzs%s@ut!%l38owb
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['*']
 
 
 # Application definition
@@ -168,3 +169,4 @@ SIMPLE_JWT = {
 SWAGGER_SETTINGS = {
     'SHOW_REQUEST_HEADERS': True,
 }
+
