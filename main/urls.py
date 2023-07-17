@@ -12,7 +12,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('menu.urls')),
     path('auth/', include('djoser.urls.jwt')),
-    path('docs/', include_docs_urls(title='Menu API')),
+    path('', include_docs_urls(title='Menu API')),
     # path('schema/', schema_view)
 ]
 
